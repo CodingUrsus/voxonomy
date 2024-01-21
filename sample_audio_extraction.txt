@@ -1,0 +1,22 @@
+# these are the steps I used to extract audio to work on voxonomy
+
+1. download yt-dl, ffmpeg, and ffprobe
+2. yt-dlp -x --progress --write-subs --write-auto-subs -audio-quality 7 https://www.youtube.com/watch?v=7ahOOnOXs4c&pp=ygUYaHViZXJtYW4gbGFiIGNsaXBzIGF0dGlh
+
+As context to the code above:
+	-x extracts audio only without downloading the video itself
+	--progress displays a progress bar until completion
+	--write-subs downloads available subtitles for the video and saves them in a separate video
+	--audio quality 7, this sets the audio quality but it didn't work so I wouldn't include it.
+	the video URL is specified after that
+
+3. Finally, I needed an mp3 version of the data (maybe needed is too strong a word) so I used ffmpeg to modify the format.
+
+ffmpeg -i input.opus -vn -ar 44100 -ac 2 output.mp3
+
+Explanation of options:
+	-i: Input file
+	-vn: Disable video (if any)
+	-ar: Set audio sample rate to 44100 Hz (common for MP3)
+	-ac: Set number of audio channels to 2 (stereo)
+	output.mp3: Output file name
