@@ -23,17 +23,17 @@ Google API key for Gemini Pro access
 
 Clone this repository:
 Bash
-```git clone https://github.com/your-username/voxonomy.git```
+git clone https://github.com/your-username/voxonomy.git
 Use code with caution. Learn more
 Install dependencies:
 Bash
-```cd voxonomy
-pip install -r requirements.txt```
+cd voxonomy
+pip install -r requirements.txt
 Use code with caution. Learn more
 Set your Google API key as an environment variable:
 Bash
-```export GOOGLE_API_KEY=your_api_key```
-Use code with caution. Learn more
+export GOOGLE_API_KEY=your_api_key
+
 ## Usage
 
 Run the main script:
