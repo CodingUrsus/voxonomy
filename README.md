@@ -46,18 +46,11 @@ Provide context (optional).
 Generate notes or engage in conversation.
 ## Documentation
 
-For detailed usage instructions and examples, refer to the docs/ directory.
-## Contributing
-
-We welcome contributions to this project! Please refer to the CONTRIBUTING.md file for guidelines.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
+For detailed usage instructions and examples, refer to the use case above.
 
 ## Contact
 
-For questions or feedback, please contact: your-email-address
+For questions or feedback, please contact: hammera@oregonstate.edu
 
 ## Additional Information
 
