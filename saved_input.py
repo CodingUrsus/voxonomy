@@ -3,6 +3,11 @@ import wave
 import threading
 import time
 import speech_recognition as sr
+import os
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv()
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -17,6 +22,14 @@ thread_running = False
 recording = False
 input_count = 0
 waiting_for_text = False
+
+def get_genai_response(text_body):
+    """Calls the Gemini model with text_body and returns the response."""
+    genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+    text_answer_model = genai.GenerativeModel('gemini-pro')
+    response = text_answer_model.generate_content(str(text_body), stream=True)
+    response.resolve()
+    return response.text
 
 def record_audio():
     global thread_running, recording, waiting_for_text
@@ -47,7 +60,10 @@ def record_audio():
                 with sr.AudioFile(filename) as source:
                     audio_data = r.record(source)
                     text = r.recognize_google(audio_data)  # Transcribe using Google
-                    print("Recognized text:", text)
+                    # Print question and response
+                    print("Question:", text)
+                    genai_response = get_genai_response(text)
+                    print("Response:", genai_response)
             except sr.UnknownValueError:
                 print("Could not understand audio")
             except sr.RequestError as e:
