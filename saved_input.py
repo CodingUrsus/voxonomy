@@ -16,9 +16,10 @@ r = sr.Recognizer()  # Create a recognizer instance
 thread_running = False
 recording = False
 input_count = 0
+waiting_for_text = False
 
 def record_audio():
-    global thread_running, recording
+    global thread_running, recording, waiting_for_text
 
     while thread_running:  # Continuously check for recording flag
         if recording:
@@ -35,15 +36,15 @@ def record_audio():
             stream.stop_stream()
             stream.close()
 
-            filename = f"rec_data_{time.strftime('%Y%m%d_%H%M%S')}.wav"  # Assign filename
-            waveFile = wave.open(filename, 'wb')  # Open with filename
+            filename = f"rec_data_{time.strftime('%Y%m%d_%H%M%S')}.wav"
+            waveFile = wave.open(filename, 'wb')
             waveFile.setnchannels(CHANNELS)
             waveFile.setsampwidth(audio.get_sample_size(FORMAT))
             waveFile.setframerate(RATE)
             waveFile.writeframes(b''.join(frames))
 
             try:
-                with sr.AudioFile(filename) as source:  # Use filename for AudioFile
+                with sr.AudioFile(filename) as source:
                     audio_data = r.record(source)
                     text = r.recognize_google(audio_data)  # Transcribe using Google
                     print("Recognized text:", text)
@@ -54,22 +55,27 @@ def record_audio():
 
             waveFile.close()
 
+            # Signal text display completion
+            waiting_for_text = False
+
 def take_input():
-    global thread_running, recording, input_count
+    global thread_running, recording, input_count, waiting_for_text
 
-    user_input = input("Enter input: ")
-    input_count += 1  # Increment input count
+    if not waiting_for_text:  # Only prompt for input if not waiting for text
+        user_input = input("Enter input: ")
+        input_count += 1  # Increment input count
 
-    if user_input:
-        if input_count % 2 == 1:  # Odd input
-            if not thread_running:
-                thread_running = True
-                t1.start()  # Start recording thread if not already running
-            recording = True  # Begin recording
-            if user_input.lower() == "exit":  # Check for "exit" on odd input
-                thread_running = False  # Terminate if "exit"
-        else:  # Even input
-            recording = False  # Stop recording
+        if user_input:
+            if input_count % 2 == 1:  # Odd input
+                if not thread_running:
+                    thread_running = True
+                    t1.start()  # Start recording thread if not already running
+                recording = True  # Begin recording
+                if user_input.lower() == "exit":  # Check for "exit" on odd input
+                    thread_running = False  # Terminate if "exit"
+            else:  # Even input
+                recording = False  # Stop recording
+                waiting_for_text = True  # Wait for text display
 
 if __name__ == "__main__":
     t1 = threading.Thread(target=record_audio)
