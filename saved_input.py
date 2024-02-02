@@ -6,6 +6,11 @@ import speech_recognition as sr
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
+import asyncio
+from pywebio import start_server
+from pywebio.input import *
+from pywebio.output import *
+from pywebio.session import defer_call, info as session_info, run_async
 
 load_dotenv()
 
